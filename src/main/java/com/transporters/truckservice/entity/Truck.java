@@ -6,9 +6,9 @@ import org.hibernate.validator.constraints.Length;
 import javax.persistence.*;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.util.Objects;
-import java.util.UUID;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -38,6 +38,9 @@ public class Truck {
 
     @Column(name = "is_freezer", nullable = false)
     private boolean isFreezer;
+
+    @Column(name = "depot_id",nullable = false)
+    private Long depotId;
 
     @Override
     public boolean equals(Object o) {

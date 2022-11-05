@@ -11,6 +11,7 @@ import javax.persistence.EntityNotFoundException;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class TruckServiceImpl implements TruckService {
@@ -64,7 +65,7 @@ public class TruckServiceImpl implements TruckService {
     public Set<TruckDto> findAll() {
         Set<TruckDto> truckDtos = new HashSet<>();
         truckRepository.findAll().forEach(truck -> truckDtos.add(getTruckDto(truck)));
-        return truckDtos;
+        return truckRepository.findAll().stream().map(this::getTruckDto).collect(Collectors.toSet());
     }
 
     private TruckDto getTruckDto(Truck truck) {
@@ -75,6 +76,7 @@ public class TruckServiceImpl implements TruckService {
                 mileagePerLiter(truck.getMileagePerLiter()).
                 registerNumber(truck.getRegisterNumber()).
                 capacity(truck.getCapacity()).
+                depotId(truck.getDepotId()).
                 build();
     }
 
@@ -85,6 +87,7 @@ public class TruckServiceImpl implements TruckService {
                 capacity(truckDto.getCapacity()).
                 mileagePerLiter(truckDto.getMileagePerLiter()).
                 registerNumber(truckDto.getRegisterNumber()).
+                depotId(truckDto.getDepotId()).
                 build();
     }
 

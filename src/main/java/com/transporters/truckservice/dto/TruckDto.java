@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import net.bytebuddy.implementation.bind.annotation.BindingPriority;
 import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.Max;
@@ -35,4 +36,7 @@ public class TruckDto {
 
     @NotNull
     private boolean isFreezer;
+
+@NotNull
+    private Long depotId;
 }
