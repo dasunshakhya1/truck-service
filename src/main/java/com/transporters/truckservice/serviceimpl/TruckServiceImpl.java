@@ -1,14 +1,18 @@
 package com.transporters.truckservice.serviceimpl;
 
+import com.transporters.truckservice.dto.DepotDto;
 import com.transporters.truckservice.dto.TruckDto;
+import com.transporters.truckservice.entity.Depot;
 import com.transporters.truckservice.entity.Truck;
+import com.transporters.truckservice.mappers.TruckMapper;
+import com.transporters.truckservice.repository.DepotRepository;
 import com.transporters.truckservice.repository.TruckRepository;
+import com.transporters.truckservice.service.DepotService;
 import com.transporters.truckservice.service.TruckService;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityExistsException;
 import javax.persistence.EntityNotFoundException;
-import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -17,9 +21,13 @@ import java.util.stream.Collectors;
 public class TruckServiceImpl implements TruckService {
 
     private final TruckRepository truckRepository;
+    private final DepotRepository depotRepository;
 
-    public TruckServiceImpl(TruckRepository truckRepository) {
+
+    public TruckServiceImpl(TruckRepository truckRepository, DepotRepository depotRepository) {
         this.truckRepository = truckRepository;
+
+        this.depotRepository = depotRepository;
     }
 
 
@@ -28,7 +36,7 @@ public class TruckServiceImpl implements TruckService {
         Optional<Truck> optional = truckRepository.findById(id);
         if (optional.isPresent()) {
             Truck truck = optional.get();
-            return getTruckDto(truck);
+            return TruckMapper.getTruckDto(truck);
         }
         throw new EntityNotFoundException("Truck with id " + id + " is not found");
     }
@@ -36,8 +44,12 @@ public class TruckServiceImpl implements TruckService {
     @Override
     public TruckDto save(TruckDto truckDto) {
         if (!existByRegisterNumber(truckDto.getRegisterNumber())) {
-            Truck truck = truckRepository.save(getTruck(truckDto));
-            return getTruckDto(truck);
+            Optional<Depot> depotDto = depotRepository.findById(truckDto.getDepotId());
+            if (depotDto != null) {
+                Truck truck = truckRepository.save(TruckMapper.getTruck(truckDto));
+                return TruckMapper.getTruckDto(truck);
+            }
+            throw new EntityNotFoundException("The depot with " + truckDto.getDepotId() + " is not found");
         }
         throw new EntityExistsException("Truck with register number " + truckDto.getRegisterNumber() + " is exist");
     }
@@ -63,33 +75,9 @@ public class TruckServiceImpl implements TruckService {
 
     @Override
     public Set<TruckDto> findAll() {
-        Set<TruckDto> truckDtos = new HashSet<>();
-        truckRepository.findAll().forEach(truck -> truckDtos.add(getTruckDto(truck)));
-        return truckRepository.findAll().stream().map(this::getTruckDto).collect(Collectors.toSet());
+        return truckRepository.findAll().stream().map(TruckMapper::getTruckDto).collect(Collectors.toSet());
     }
 
-    private TruckDto getTruckDto(Truck truck) {
-        return TruckDto.
-                builder().
-                id(truck.getId()).
-                isFreezer(truck.isFreezer()).
-                mileagePerLiter(truck.getMileagePerLiter()).
-                registerNumber(truck.getRegisterNumber()).
-                capacity(truck.getCapacity()).
-                depotId(truck.getDepotId()).
-                build();
-    }
-
-    private Truck getTruck(TruckDto truckDto) {
-        return Truck.
-                builder().
-                isFreezer(truckDto.isFreezer()).
-                capacity(truckDto.getCapacity()).
-                mileagePerLiter(truckDto.getMileagePerLiter()).
-                registerNumber(truckDto.getRegisterNumber()).
-                depotId(truckDto.getDepotId()).
-                build();
-    }
 
     @Override
     public boolean existByRegisterNumber(String registerNumber) {
@@ -100,9 +88,16 @@ public class TruckServiceImpl implements TruckService {
     public TruckDto findByRegisterNumber(String registerNumber) {
 
         if (existByRegisterNumber(registerNumber)) {
-            Truck truck = truckRepository.findByRegisterNumber(registerNumber);
-            return getTruckDto(truck);
+            Optional<Truck> truck = truckRepository.findByRegisterNumber(registerNumber);
+            return TruckMapper.getTruckDto(truck.get());
         }
         throw new EntityNotFoundException("Truck with register number " + registerNumber + " is not found");
     }
+
+    @Override
+    public Set<TruckDto> findByDepotId(Long depotId) {
+        return truckRepository.findByDepotId(depotId).stream().map(TruckMapper::getTruckDto).collect(Collectors.toSet());
+    }
+
+
 }

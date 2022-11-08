@@ -1,6 +1,7 @@
 package com.transporters.truckservice.errorhandler;
 
 import com.transporters.truckservice.dto.RestError;
+import com.transporters.truckservice.exceptions.NonEmptyDepotException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -28,5 +29,13 @@ public class RestErrorHandler extends ResponseEntityExceptionHandler {
     @ResponseBody RestError
      handleEntityNotFoundRequest(Exception e) {
         return new RestError( HttpStatus.NOT_FOUND, LocalDateTime.now(), e.getLocalizedMessage());
+    }
+
+
+    @ExceptionHandler(NonEmptyDepotException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseBody RestError
+    handleNonEmptyDepotDeleteRequest(Exception e){
+        return new RestError( HttpStatus.BAD_REQUEST, LocalDateTime.now(), e.getLocalizedMessage());
     }
 }

@@ -32,6 +32,11 @@ public class TruckController {
         return truckService.findByRegisterNumber(registerNumber);
     }
 
+    @GetMapping("/depot/{depotId}")
+    public Set<TruckDto> getTrucksOfDepot(@PathVariable("depotId") Long depotId){
+        return  truckService.findByDepotId(depotId);
+    }
+
     @PostMapping("/new")
     public TruckDto createTruck(@RequestBody TruckDto truckDto) {
         return truckService.save(truckDto);

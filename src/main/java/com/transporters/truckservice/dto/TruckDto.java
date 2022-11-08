@@ -1,5 +1,6 @@
 package com.transporters.truckservice.dto;
 
+import com.transporters.truckservice.entity.Depot;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -37,6 +38,6 @@ public class TruckDto {
     @NotNull
     private boolean isFreezer;
 
-@NotNull
+    @NotNull
     private Long depotId;
 }

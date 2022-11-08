@@ -39,7 +39,7 @@ public class Truck {
     @Column(name = "is_freezer", nullable = false)
     private boolean isFreezer;
 
-    @Column(name = "depot_id",nullable = false)
+    @Column(name = "depot_id", nullable = false)
     private Long depotId;
 
     @Override
