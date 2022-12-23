@@ -1,17 +1,16 @@
 package com.transporters.truckservice.dto;
 
-import com.transporters.truckservice.entity.Depot;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import net.bytebuddy.implementation.bind.annotation.BindingPriority;
 import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
-import java.math.BigDecimal;
+
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -28,12 +27,12 @@ public class TruckDto {
     @Min(6500)
     @Max(14000)
     @NotNull
-    private BigDecimal capacity;
+    private double capacity;
 
     @Min(3)
     @Max(7)
     @NotNull
-    private BigDecimal mileagePerLiter;
+    private double mileagePerLiter;
 
     @NotNull
     private boolean isFreezer;

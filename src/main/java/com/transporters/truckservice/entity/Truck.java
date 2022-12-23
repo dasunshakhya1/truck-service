@@ -6,8 +6,6 @@ import org.hibernate.validator.constraints.Length;
 import javax.persistence.*;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
-import java.math.BigDecimal;
 import java.util.Objects;
 
 @AllArgsConstructor
@@ -29,12 +27,12 @@ public class Truck {
     @Column(name = "capacity", nullable = false)
     @Min(6500)
     @Max(14000)
-    private BigDecimal capacity;
+    private double capacity;
 
     @Column(name = "milege_per_liter", nullable = false)
     @Min(3)
     @Max(7)
-    private BigDecimal mileagePerLiter;
+    private double mileagePerLiter;
 
     @Column(name = "is_freezer", nullable = false)
     private boolean isFreezer;

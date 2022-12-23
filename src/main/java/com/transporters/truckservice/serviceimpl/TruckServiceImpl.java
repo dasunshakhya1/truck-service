@@ -1,13 +1,11 @@
 package com.transporters.truckservice.serviceimpl;
 
-import com.transporters.truckservice.dto.DepotDto;
 import com.transporters.truckservice.dto.TruckDto;
 import com.transporters.truckservice.entity.Depot;
 import com.transporters.truckservice.entity.Truck;
 import com.transporters.truckservice.mappers.TruckMapper;
 import com.transporters.truckservice.repository.DepotRepository;
 import com.transporters.truckservice.repository.TruckRepository;
-import com.transporters.truckservice.service.DepotService;
 import com.transporters.truckservice.service.TruckService;
 import org.springframework.stereotype.Service;
 
@@ -45,9 +43,9 @@ public class TruckServiceImpl implements TruckService {
     public TruckDto save(TruckDto truckDto) {
         if (!existByRegisterNumber(truckDto.getRegisterNumber())) {
             Optional<Depot> depotDto = depotRepository.findById(truckDto.getDepotId());
-            if (depotDto != null) {
-                Truck truck = truckRepository.save(TruckMapper.getTruck(truckDto));
-                return TruckMapper.getTruckDto(truck);
+            if (depotDto.isPresent()) {
+                truckRepository.save(TruckMapper.getTruck(truckDto));
+                return truckDto;
             }
             throw new EntityNotFoundException("The depot with " + truckDto.getDepotId() + " is not found");
         }
