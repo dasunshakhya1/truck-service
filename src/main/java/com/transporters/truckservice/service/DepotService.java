@@ -6,10 +6,10 @@ import com.transporters.truckservice.entity.Truck;
 
 import java.util.Set;
 
-public interface DepotService extends AbstractService<DepotDto,Long> {
+public interface DepotService extends AbstractService<Depot,Long> {
 
-    DepotDto findByName(String name);
-    DepotDto findByShortCord(String shortCOde);
+    Depot findByName(String name);
+    Depot findByShortCord(String shortCOde);
     boolean existsByName(String name);
 
 }

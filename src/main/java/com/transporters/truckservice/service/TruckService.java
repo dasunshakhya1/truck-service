@@ -7,10 +7,10 @@ import com.transporters.truckservice.entity.Truck;
 import java.util.Set;
 
 
-public interface TruckService extends AbstractService<TruckDto, Long> {
+public interface TruckService extends AbstractService<Truck, Long> {
 
     boolean existByRegisterNumber(String registerNumber);
 
-    TruckDto findByRegisterNumber(String registerNumber);
-    Set<TruckDto> findByDepotId(Long depotId);
+    Truck findByRegisterNumber(String registerNumber);
+    Set<Truck> findByDepotId(Long depotId);
 }

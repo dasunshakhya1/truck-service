@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityExistsException;
 import javax.persistence.EntityNotFoundException;
+import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -30,21 +31,20 @@ public class TruckServiceImpl implements TruckService {
 
 
     @Override
-    public TruckDto findById(Long id) {
+    public Truck findById(Long id) {
         Optional<Truck> optional = truckRepository.findById(id);
         if (optional.isPresent()) {
-            Truck truck = optional.get();
-            return TruckMapper.getTruckDto(truck);
+            return optional.get();
         }
         throw new EntityNotFoundException("Truck with id " + id + " is not found");
     }
 
     @Override
-    public TruckDto save(TruckDto truckDto) {
+    public Truck save(Truck truckDto) {
         if (!existByRegisterNumber(truckDto.getRegisterNumber())) {
             Optional<Depot> depotDto = depotRepository.findById(truckDto.getDepotId());
             if (depotDto.isPresent()) {
-                truckRepository.save(TruckMapper.getTruck(truckDto));
+                truckRepository.save(truckDto);
                 return truckDto;
             }
             throw new EntityNotFoundException("The depot with " + truckDto.getDepotId() + " is not found");
@@ -62,7 +62,7 @@ public class TruckServiceImpl implements TruckService {
     }
 
     @Override
-    public TruckDto update(TruckDto truckDto, Long id) {
+    public Truck update(Truck truckDto, Long id) {
         return null;
     }
 
@@ -72,8 +72,8 @@ public class TruckServiceImpl implements TruckService {
     }
 
     @Override
-    public Set<TruckDto> findAll() {
-        return truckRepository.findAll().stream().map(TruckMapper::getTruckDto).collect(Collectors.toSet());
+    public Set<Truck> findAll() {
+        return new HashSet<>(truckRepository.findAll());
     }
 
 
@@ -83,18 +83,18 @@ public class TruckServiceImpl implements TruckService {
     }
 
     @Override
-    public TruckDto findByRegisterNumber(String registerNumber) {
+    public Truck findByRegisterNumber(String registerNumber) {
 
         if (existByRegisterNumber(registerNumber)) {
             Optional<Truck> truck = truckRepository.findByRegisterNumber(registerNumber);
-            return TruckMapper.getTruckDto(truck.get());
+            return truck.get();
         }
         throw new EntityNotFoundException("Truck with register number " + registerNumber + " is not found");
     }
 
     @Override
-    public Set<TruckDto> findByDepotId(Long depotId) {
-        return truckRepository.findByDepotId(depotId).stream().map(TruckMapper::getTruckDto).collect(Collectors.toSet());
+    public Set<Truck> findByDepotId(Long depotId) {
+        return new HashSet<>(truckRepository.findByDepotId(depotId));
     }
 
 

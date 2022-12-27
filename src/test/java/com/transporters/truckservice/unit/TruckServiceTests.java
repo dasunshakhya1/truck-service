@@ -1,4 +1,4 @@
-package com.transporters.truckservice;
+package com.transporters.truckservice.unit;
 
 import com.transporters.truckservice.dto.TruckDto;
 import com.transporters.truckservice.entity.Depot;
@@ -12,7 +12,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-
 import java.util.Optional;
 
 
@@ -44,16 +43,17 @@ class TruckServiceTests {
     @Test
     public void testFindById() {
         when(truckRepository.findById(122112112L)).thenReturn(Optional.of(truck));
-        TruckDto truckDto = truckService.findById(122112112L);
-        assertThat(truckDto.getId()).isEqualTo(122112112L);
+        Truck t = truckService.findById(122112112L);
+        assertThat(t.getId()).isEqualTo(122112112L);
     }
 
     @Test
     public void testSave() {
         when(truckRepository.existsByRegisterNumber("WE12309")).thenReturn(false);
-        when(depotRepository.findById(truckDto.getDepotId())).thenReturn(Optional.ofNullable(depot));
-        TruckDto tdto = truckService.save(truckDto);
-        assertThat(tdto.getId()).isEqualTo(122112112L);
+        when(depotRepository.findById(truck.getDepotId())).thenReturn(Optional.ofNullable(depot));
+        Truck t = truckService.save(truck);
+        assertThat(t.getId()).isEqualTo(122112112L);
     }
+
 
 }

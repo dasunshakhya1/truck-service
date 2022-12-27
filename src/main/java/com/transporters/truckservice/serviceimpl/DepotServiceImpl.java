@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityExistsException;
 import javax.persistence.EntityNotFoundException;
+import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -30,19 +31,18 @@ public class DepotServiceImpl implements DepotService {
     }
 
     @Override
-    public DepotDto findById(Long aLong) {
+    public Depot findById(Long aLong) {
         Optional<Depot> optional = depotRepository.findById(aLong);
         if (optional.isPresent()) {
-            return DepotMapper.getDepotDto(optional.get());
+            return optional.get();
         }
         throw new EntityNotFoundException("Depot with id " + aLong + " not exist");
     }
 
     @Override
-    public DepotDto save(DepotDto depot) {
+    public Depot save(Depot depot) {
         if (!existsByName(depot.getName())) {
-            Depot dep = depotRepository.save(DepotMapper.getDepot(depot));
-            return DepotMapper.getDepotDto(dep);
+                return depotRepository.save(depot);
         }
         throw new EntityExistsException("Depot with name " + depot.getName() + "exists");
     }
@@ -63,7 +63,7 @@ public class DepotServiceImpl implements DepotService {
     }
 
     @Override
-    public DepotDto update(DepotDto depot, Long aLong) {
+    public Depot update(Depot depot, Long aLong) {
         return null;
     }
 
@@ -73,27 +73,27 @@ public class DepotServiceImpl implements DepotService {
     }
 
     @Override
-    public Set<DepotDto> findAll() {
-        return depotRepository.findAll().stream().map(DepotMapper::getDepotDto).collect(Collectors.toSet());
+    public Set<Depot> findAll() {
+        return  new HashSet<>(depotRepository.findAll());
     }
 
     @Override
-    public DepotDto findByName(String name) {
+    public Depot findByName(String name) {
 
         Optional<Depot> depot = depotRepository.findByName(name);
         if (depot.isEmpty()) {
             throw new EntityNotFoundException("Depot with name " + name + " not exist");
         }
-        return DepotMapper.getDepotDto(depot.get());
+        return depot.get();
     }
 
     @Override
-    public DepotDto findByShortCord(String shortCOde) {
+    public Depot findByShortCord(String shortCOde) {
         Optional<Depot> depot = depotRepository.findByShortCord(shortCOde);
         if (depot.isEmpty()) {
             throw new EntityNotFoundException("Depot with short code " + shortCOde + " not exist");
         }
-        return DepotMapper.getDepotDto(depot.get());
+        return depot.get();
     }
 
     @Override
